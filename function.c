@@ -120,3 +120,23 @@ int bacaFile(const char *namaFile, char words[][MAX_WORD_LEN])
     }
     return jumlah;
 }
+
+void tampilkanDataFile(char words[][MAX_WORD_LEN], int jumlah,int jumlahTampil, const char *judul) 
+{
+    int tampil, i;
+    printf("\n--- %s ---\n", judul);
+    if (jumlah <= 0) 
+    { 
+        printf("(tidak ada data)\n"); return;
+    }
+    tampil = (jumlah < jumlahTampil) ? jumlah : jumlahTampil;
+    
+    for (i = 0; i < tampil; i++)
+        printf("%4d. %s\n", i + 1, words[i]);
+    
+    if (jumlah > jumlahTampil)
+        printf("     ... (%d kata tidak ditampilkan)\n",
+               jumlah - jumlahTampil);
+               
+    printf("Total kata dimuat: %d\n", jumlah);
+}
