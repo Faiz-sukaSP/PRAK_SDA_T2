@@ -137,6 +137,20 @@ void tampilkanDataFile(char words[][MAX_WORD_LEN], int jumlah,int jumlahTampil, 
     if (jumlah > jumlahTampil)
         printf("     ... (%d kata tidak ditampilkan)\n",
                jumlah - jumlahTampil);
-               
+
     printf("Total kata dimuat: %d\n", jumlah);
+}
+
+/* ================================================================== */
+/*  SHUFFLE — Fisher-Yates                                              */
+/* ================================================================== */
+
+void shuffleInt(int arr[], int n) {
+    int i, j, tmp;
+    for (i = n - 1; i > 0; i--) 
+    {
+        j = rand() % (i + 1);
+        if (i == j) continue;
+        tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
 }
