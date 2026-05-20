@@ -154,3 +154,13 @@ void shuffleInt(int arr[], int n) {
         tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
     }
 }
+
+void shuffleStr(char arr[][MAX_WORD_LEN], int n) {
+    int i, j;
+    for (i = n - 1; i > 0; i--) 
+    {
+        j = rand() % (i + 1);
+        if (i == j) continue;
+        swapStr(arr[i], arr[j]);
+    }
+}
