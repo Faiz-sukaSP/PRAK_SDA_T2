@@ -164,3 +164,37 @@ void shuffleStr(char arr[][MAX_WORD_LEN], int n) {
         swapStr(arr[i], arr[j]);
     }
 }
+
+/* ================================================================== */
+/*  STANDARD SORTING — integer ascending                               */
+/* ================================================================== */
+
+void bubbleSort(int arr[], int n) {
+    int i, j, tertukar;
+    if (n < 2) return;
+    for (i = 0; i < n - 1; i++) 
+    {
+        tertukar = 0;
+        for (j = 0; j < n - 1 - i; j++) 
+        {
+            if (arr[j] > arr[j + 1]) 
+            {
+                swapInt(&arr[j], &arr[j + 1]);
+                tertukar = 1;
+            }
+        }
+        if (!tertukar) break;
+    }
+}
+
+void selectionSort(int arr[], int n) {
+    int i, j, idxMin;
+    if (n < 2) return;
+    for (i = 0; i < n - 1; i++) 
+    {
+        idxMin = i;
+        for (j = i + 1; j < n; j++)
+            if (arr[j] < arr[idxMin]) idxMin = j;
+        if (idxMin != i) swapInt(&arr[i], &arr[idxMin]);
+    }
+}
