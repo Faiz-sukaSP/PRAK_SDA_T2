@@ -445,3 +445,31 @@ int bacaPilihanMenu(int min, int max)
     }
 }
 
+static int mintaFile(char words[][MAX_WORD_LEN], int *jumlah)
+{
+    char namaFile[256];
+    int hasil;
+    while (1)
+    {
+        printf("\n=================================\n");
+        printf("  Masukkan File Terlebih dahulu");
+        printf("\n=================================\n");
+
+        printf("Nama File: ");
+        if (fgets(namaFile, (int)sizeof(namaFile), stdin) == NULL)
+            return 0;
+        namaFile[strcspn(namaFile, "\n")] = '\0';
+        hasil = bacaFile(namaFile, words);
+        if (hasil <= 0)
+        {
+            printf("Coba lagi.\n");
+            continue;
+        }
+        if (hasil < 2)
+            return 0;
+        *jumlah = hasil;
+        printf("-----------------------------------------\n");
+        printf("File berhasil terbaca.\nSilahkan pilih algoritma yang kamu inginkan\n");
+        return 1;
+    }
+}
