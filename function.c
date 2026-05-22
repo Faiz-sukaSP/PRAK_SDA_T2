@@ -198,3 +198,488 @@ void selectionSort(int arr[], int n) {
         if (idxMin != i) swapInt(&arr[i], &arr[idxMin]);
     }
 }
+void insertionSort(int arr[], int n)
+{
+    int i, j, kunci;
+    if (n < 2)
+        return;
+    for (i = 1; i < n; i++)
+    {
+        kunci = arr[i];
+        j = i - 1;
+        while (j >= 0 && arr[j] > kunci)
+        {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = kunci;
+    }
+}
+
+/* ================================================================== */
+/*  ADVANCE SORTING — string ascending leksikografis                   */
+/* ================================================================== */
+
+/* ---------- Quick Sort iteratif (stack di heap) ---------- */
+
+static int partisiStr(char arr[][MAX_WORD_LEN], int lo, int hi)
+{
+    char pivot[MAX_WORD_LEN];
+    int mid = lo + (hi - lo) / 2;
+    int i, j;
+
+    /* Pindahkan elemen tengah ke posisi hi sebagai pivot */
+    swapStr(arr[mid], arr[hi]);
+    memcpy(pivot, arr[hi], MAX_WORD_LEN);
+
+    i = lo - 1;
+    for (j = lo; j < hi; j++)
+    {
+        if (strcmp(arr[j], pivot) <= 0)
+        {
+            i++;
+            swapStr(arr[i], arr[j]);
+        }
+    }
+    swapStr(arr[i + 1], arr[hi]);
+    return i + 1;
+}
+
+void quickSortStr(char arr[][MAX_WORD_LEN], int kiri, int kanan)
+{
+    int *stack;
+    int top = -1, p, lo, hi;
+
+    if (kiri >= kanan)
+        return;
+
+    stack = (int *)malloc(2 * (size_t)(kanan - kiri + 1) * sizeof(int));
+    if (!stack)
+    {
+        fprintf(stderr, "[ERROR]: malloc gagal di quickSortStr\n");
+        return;
+    }
+
+    stack[++top] = kiri;
+    stack[++top] = kanan;
+
+    while (top >= 0)
+    {
+        hi = stack[top--];
+        lo = stack[top--];
+        if (lo >= hi)
+            continue;
+        p = partisiStr(arr, lo, hi);
+        if (p - 1 > lo)
+        {
+            stack[++top] = lo;
+            stack[++top] = p - 1;
+        }
+        if (p + 1 < hi)
+        {
+            stack[++top] = p + 1;
+            stack[++top] = hi;
+        }
+    }
+    free(stack);
+}
+
+/* ---------- Merge Sort iteratif bottom-up ---------- */
+
+static void mergeStr(char arr[][MAX_WORD_LEN],
+                     int lo, int mid, int hi)
+{
+    int n1 = mid - lo + 1;
+    int n2 = hi - mid;
+    int i, j, k;
+
+    char (*L)[MAX_WORD_LEN] = malloc((size_t)n1 * sizeof(*L));
+    char (*R)[MAX_WORD_LEN] = malloc((size_t)n2 * sizeof(*R));
+    if (!L || !R)
+    {
+        fprintf(stderr, "[ERROR]: malloc gagal di mergeStr\n");
+        free(L);
+        free(R);
+        return;
+    }
+
+    for (i = 0; i < n1; i++)
+        memcpy(L[i], arr[lo + i], MAX_WORD_LEN);
+    for (j = 0; j < n2; j++)
+        memcpy(R[j], arr[mid + 1 + j], MAX_WORD_LEN);
+
+    i = 0;
+    j = 0;
+    k = lo;
+    while (i < n1 && j < n2)
+    {
+        if (strcmp(L[i], R[j]) <= 0)
+            memcpy(arr[k++], L[i++], MAX_WORD_LEN);
+        else
+            memcpy(arr[k++], R[j++], MAX_WORD_LEN);
+    }
+    while (i < n1)
+        memcpy(arr[k++], L[i++], MAX_WORD_LEN);
+    while (j < n2)
+        memcpy(arr[k++], R[j++], MAX_WORD_LEN);
+
+    free(L);
+    free(R);
+}
+
+void mergeSortStr(char arr[][MAX_WORD_LEN], int kiri, int kanan)
+{
+    int lebar, lo, mid, hi;
+    if (kiri >= kanan)
+        return;
+    for (lebar = 1; lebar <= kanan - kiri; lebar *= 2)
+    {
+        for (lo = kiri; lo < kanan; lo += 2 * lebar)
+        {
+            mid = lo + lebar - 1;
+            hi = lo + 2 * lebar - 1;
+            if (mid > kanan)
+                mid = kanan;
+            if (hi > kanan)
+                hi = kanan;
+            if (mid < hi)
+                mergeStr(arr, lo, mid, hi);
+        }
+    }
+}
+
+/* ---------- Shell Sort — gap Knuth ---------- */
+
+void shellSortStr(char arr[][MAX_WORD_LEN], int n)
+{
+    int gap, i, j;
+    char tmp[MAX_WORD_LEN];
+    if (n < 2)
+        return;
+    gap = 1;
+    while (gap < n / 3)
+        gap = gap * 3 + 1;
+    while (gap >= 1)
+    {
+        for (i = gap; i < n; i++)
+        {
+            memcpy(tmp, arr[i], MAX_WORD_LEN);
+            j = i;
+            while (j >= gap && strcmp(arr[j - gap], tmp) > 0)
+            {
+                memcpy(arr[j], arr[j - gap], MAX_WORD_LEN);
+                j -= gap;
+            }
+            memcpy(arr[j], tmp, MAX_WORD_LEN);
+        }
+        gap = (gap - 1) / 3;
+    }
+}
+
+/* ================================================================== */
+/*                 Tampilan & statistik sorting                       */
+/* ================================================================== */
+
+void tampilkanDataInt(int arr[], int n, int jumlahTampil,
+                      const char *judul)
+{
+    int tampil, i;
+    printf("\n--- %s ---\n", judul);
+    if (n <= 0)
+    {
+        printf("(tidak ada data)\n");
+        return;
+    }
+    tampil = (n < jumlahTampil) ? n : jumlahTampil;
+    for (i = 0; i < tampil; i++)
+    {
+        printf("%5d", arr[i]);
+        if ((i + 1) % 10 == 0)
+            printf("\n");
+    }
+    if (tampil % 10 != 0)
+        printf("\n");
+    if (n > jumlahTampil)
+        printf("... (%d data tidak ditampilkan)\n", n - jumlahTampil);
+    printf("Total data: %d\n", n);
+}
+
+void tampilkanRingkasan(const char *namaAlgoritma, int n,
+                        double waktuMs)
+{
+    printf("\n================================\n");
+    printf("Algoritma  : %s\n", namaAlgoritma);
+    printf("Jumlah data: %d\n", n);
+    printf("Waktu      : %.2f ms\n", waktuMs);
+    printf("================================\n");
+}
+
+/* ================================================================== */
+/*  MENU & INPUT                                                        */
+/* ================================================================== */
+
+int bacaPilihanMenu(int min, int max)
+{
+    char buf[32];
+    int nilai;
+    char *end;
+    while (1)
+    {
+        if (fgets(buf, (int)sizeof(buf), stdin) == NULL)
+            return max;
+        buf[strcspn(buf, "\n")] = '\0';
+        nilai = (int)strtol(buf, &end, 10);
+        if (end == buf || *end != '\0')
+        {
+            printf("Input tidak valid. Masukkan angka %d-%d: ",
+                   min, max);
+            continue;
+        }
+        if (nilai < min || nilai > max)
+        {
+            printf("Di luar rentang. Masukkan angka %d-%d: ",
+                   min, max);
+            continue;
+        }
+        return nilai;
+    }
+}
+
+static int mintaFile(char words[][MAX_WORD_LEN], int *jumlah)
+{
+    char namaFile[256];
+    int hasil;
+    while (1)
+    {
+        printf("\n=================================\n");
+        printf("  Masukkan File Terlebih dahulu");
+        printf("\n=================================\n");
+
+        printf("Nama File: ");
+        if (fgets(namaFile, (int)sizeof(namaFile), stdin) == NULL)
+            return 0;
+        namaFile[strcspn(namaFile, "\n")] = '\0';
+        hasil = bacaFile(namaFile, words);
+        if (hasil <= 0)
+        {
+            printf("Coba lagi.\n");
+            continue;
+        }
+        if (hasil < 2)
+            return 0;
+        *jumlah = hasil;
+        printf("-----------------------------------------\n");
+        printf("File berhasil terbaca.\nSilahkan pilih algoritma yang kamu inginkan\n");
+        return 1;
+    }
+}
+
+/* ================================================================== */
+/*                        SORTING DASAR                               */
+/* ================================================================== */
+
+void jalankanMenuStandard(void)
+{
+    static int data[STANDARD_DATA_SIZE];
+    static int sebelum[STANDARD_DATA_SIZE];
+    int pilihan, i;
+    clock_t mulai, selesai;
+    double waktuMs;
+
+    // generate data satu kali saat pilihan 1 menu utama di pilih
+    printf("\n========================================\n");
+    printf("Menghasilkan 1000 angka random....\n");
+    for (i = 0; i < STANDARD_DATA_SIZE; i++)
+    {
+        data[i] = rand() % 10000;
+    }
+
+    shuffleInt(data, STANDARD_DATA_SIZE);
+    printf("========================================\n");
+    printf("Silahkan pilih algoritma yang kamu inginkan\n");
+
+    // simpan data yang digenerate agar data tidak hilang setelah di sorting
+    salinInt(sebelum, data, STANDARD_DATA_SIZE);
+
+    while (1)
+    {
+        printf("\n=========================\n");
+        printf("      SORTING DASAR\n");
+        printf("=========================\n");
+        printf("1. Bubble Sort\n");
+        printf("2. Selection Sort\n");
+        printf("3. Insertion Sort\n");
+        printf("4. Kembali\n");
+        printf("=========================\nPilih menu : ");
+        pilihan = bacaPilihanMenu(1, 4);
+        if (pilihan == 4)
+            break;
+
+        // Simpan salinan sebelum sorting
+        salinInt(data, sebelum, STANDARD_DATA_SIZE);
+
+        // Tampilkan 30 data pertama sebelum sorting
+        printf("\n--- Data Sebelum Sorting (30 dari 1000) ---\n");
+        for (i = 0; i < TAMPIL_INT; i++)
+        {
+            printf("%5d", sebelum[i]);
+            if ((i + 1) % 10 == 0)
+                printf("\n");
+        }
+        printf("\n");
+
+        /* Sort dan ukur waktu */
+        mulai = clock();
+        switch (pilihan)
+        {
+        case 1:
+            bubbleSort(data, STANDARD_DATA_SIZE);
+            break;
+        case 2:
+            selectionSort(data, STANDARD_DATA_SIZE);
+            break;
+        case 3:
+            insertionSort(data, STANDARD_DATA_SIZE);
+            break;
+        }
+        selesai = clock();
+        waktuMs = ((double)(selesai - mulai) / CLOCKS_PER_SEC) * 1000.0;
+
+        /* Tampilkan 30 data pertama sesudah sorting */
+        printf("\n--- Data Sesudah Sorting (30 terkecil dari 1000) ---\n");
+        for (i = 0; i < TAMPIL_INT; i++)
+        {
+            printf("%5d", data[i]);
+            if ((i + 1) % 10 == 0)
+                printf("\n");
+        }
+        printf("\n");
+
+        switch (pilihan)
+        {
+        case 1:
+            tampilkanRingkasan("Bubble Sort", STANDARD_DATA_SIZE, waktuMs);
+            break;
+        case 2:
+            tampilkanRingkasan("Selection Sort", STANDARD_DATA_SIZE, waktuMs);
+            break;
+        case 3:
+            tampilkanRingkasan("Insertion Sort", STANDARD_DATA_SIZE, waktuMs);
+            break;
+        }
+    }
+}
+
+/* ================================================================== */
+/*  ADVANCE SORTING                                                     */
+/* ================================================================== */
+
+void jalankanMenuAdvance(void)
+{
+    static char words[MAX_WORDS][MAX_WORD_LEN];
+    static char sebelum[MAX_WORDS][MAX_WORD_LEN];
+    int pilihan, jumlah = 0;
+    clock_t mulai, selesai;
+    double waktuMs;
+
+    /* Baca file SEKALI sebelum masuk loop submenu */
+    if (!mintaFile(words, &jumlah))
+        return;
+    salinStr(sebelum, words, jumlah);
+
+    while (1)
+    {
+        printf("\n=========================\n");
+        printf("     ADVANCE SORTING\n");
+        printf("=========================\n");
+        printf("1. Quick Sort\n");
+        printf("2. Merge Sort\n");
+        printf("3. Shell Sort\n");
+        printf("4. Kembali\n");
+        printf("=========================\nPilih menu : ");
+        pilihan = bacaPilihanMenu(1, 4);
+        if (pilihan == 4)
+            break;
+
+        /* Restore dari backup lalu shuffle ulang tiap algoritma */
+        salinStr(words, sebelum, jumlah);
+        shuffleStr(words, jumlah);
+
+        tampilkanDataFile(sebelum, jumlah, TAMPIL_STR,
+                          "Data Sebelum Sorting");
+
+        mulai = clock();
+        switch (pilihan)
+        {
+        case 1:
+            quickSortStr(words, 0, jumlah - 1);
+            break;
+        case 2:
+            mergeSortStr(words, 0, jumlah - 1);
+            break;
+        case 3:
+            shellSortStr(words, jumlah);
+            break;
+        }
+        selesai = clock();
+        waktuMs = ((double)(selesai - mulai) / CLOCKS_PER_SEC) * 1000.0;
+
+        switch (pilihan)
+        {
+        case 1:
+            tampilkanDataFile(words, jumlah, TAMPIL_STR,
+                              "Data Sesudah Sorting (Quick Sort)");
+            tampilkanRingkasan("Quick Sort", jumlah, waktuMs);
+            break;
+        case 2:
+            tampilkanDataFile(words, jumlah, TAMPIL_STR,
+                              "Data Sesudah Sorting (Merge Sort)");
+            tampilkanRingkasan("Merge Sort", jumlah, waktuMs);
+            break;
+        case 3:
+            tampilkanDataFile(words, jumlah, TAMPIL_STR,
+                              "Data Sesudah Sorting (Shell Sort)");
+            tampilkanRingkasan("Shell Sort", jumlah, waktuMs);
+            break;
+        }
+    }
+}
+
+/* ================================================================== */
+/*  ENTRY POINT                                                         */
+/* ================================================================== */
+
+void jalankanProgram(void)
+{
+    int pilihan;
+    srand((unsigned int)time(NULL)); // Menggenerate bilangan acak
+
+    printf("\n========================================\n");
+    printf("   Selamat Datang di Sorting Program\n");
+    printf("========================================\n");
+
+    while (1)
+    {
+        printf("\n=========================\n");
+        printf("       MENU UTAMA\n");
+        printf("=========================\n");
+        printf("1. Sorting Dasar\n");
+        printf("2. Advance Sorting\n");
+        printf("3. Keluar\n");
+        printf("=========================\nPilih menu : ");
+        pilihan = bacaPilihanMenu(1, 3);
+
+        switch (pilihan)
+        {
+        case 1:
+            jalankanMenuStandard();
+            break;
+        case 2:
+            jalankanMenuAdvance();
+            break;
+        case 3:
+            printf("\nTerima kasih telah menggunakan program kami.\n");
+            return;
+        }
+    }
+}
