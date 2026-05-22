@@ -413,3 +413,35 @@ void tampilkanRingkasan(const char *namaAlgoritma, int n,
     printf("Waktu      : %.2f ms\n", waktuMs);
     printf("================================\n");
 }
+
+/* ================================================================== */
+/*  MENU & INPUT                                                        */
+/* ================================================================== */
+
+int bacaPilihanMenu(int min, int max)
+{
+    char buf[32];
+    int nilai;
+    char *end;
+    while (1)
+    {
+        if (fgets(buf, (int)sizeof(buf), stdin) == NULL)
+            return max;
+        buf[strcspn(buf, "\n")] = '\0';
+        nilai = (int)strtol(buf, &end, 10);
+        if (end == buf || *end != '\0')
+        {
+            printf("Input tidak valid. Masukkan angka %d-%d: ",
+                   min, max);
+            continue;
+        }
+        if (nilai < min || nilai > max)
+        {
+            printf("Di luar rentang. Masukkan angka %d-%d: ",
+                   min, max);
+            continue;
+        }
+        return nilai;
+    }
+}
+
