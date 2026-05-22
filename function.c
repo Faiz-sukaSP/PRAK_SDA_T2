@@ -121,19 +121,20 @@ int bacaFile(const char *namaFile, char words[][MAX_WORD_LEN])
     return jumlah;
 }
 
-void tampilkanDataFile(char words[][MAX_WORD_LEN], int jumlah,int jumlahTampil, const char *judul) 
+void tampilkanDataFile(char words[][MAX_WORD_LEN], int jumlah, int jumlahTampil, const char *judul)
 {
     int tampil, i;
     printf("\n--- %s ---\n", judul);
-    if (jumlah <= 0) 
-    { 
-        printf("(tidak ada data)\n"); return;
+    if (jumlah <= 0)
+    {
+        printf("(tidak ada data)\n");
+        return;
     }
     tampil = (jumlah < jumlahTampil) ? jumlah : jumlahTampil;
-    
+
     for (i = 0; i < tampil; i++)
         printf("%4d. %s\n", i + 1, words[i]);
-    
+
     if (jumlah > jumlahTampil)
         printf("     ... (%d kata tidak ditampilkan)\n",
                jumlah - jumlahTampil);
@@ -141,60 +142,81 @@ void tampilkanDataFile(char words[][MAX_WORD_LEN], int jumlah,int jumlahTampil, 
     printf("Total kata dimuat: %d\n", jumlah);
 }
 
-/* ================================================================== */
-/*  SHUFFLE — Fisher-Yates                                              */
-/* ================================================================== */
+/*
+    ========================
+     SHUFFLE — Fisher-Yates
+    ========================
+*/
 
-void shuffleInt(int arr[], int n) {
+// Menggacak array integer
+void shuffleInt(int arr[], int n)
+{
     int i, j, tmp;
-    for (i = n - 1; i > 0; i--) 
+
+    for (i = n - 1; i > 0; i--)
     {
         j = rand() % (i + 1);
-        if (i == j) continue;
-        tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+        if (i == j)
+            continue;
+        tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
     }
 }
 
-void shuffleStr(char arr[][MAX_WORD_LEN], int n) {
+// Menggacak array string
+void shuffleStr(char arr[][MAX_WORD_LEN], int n)
+{
     int i, j;
-    for (i = n - 1; i > 0; i--) 
+    for (i = n - 1; i > 0; i--)
     {
         j = rand() % (i + 1);
-        if (i == j) continue;
+        if (i == j)
+            continue;
         swapStr(arr[i], arr[j]);
     }
 }
 
-/* ================================================================== */
-/*  STANDARD SORTING — integer ascending                               */
-/* ================================================================== */
+/*
+    ========================
+        STANDART SORTING
+    ========================
+*/
 
-void bubbleSort(int arr[], int n) {
+// Algoritma buble sort
+void bubbleSort(int arr[], int n)
+{
     int i, j, tertukar;
-    if (n < 2) return;
-    for (i = 0; i < n - 1; i++) 
+
+    for (i = 0; i < n - 1; i++)
     {
         tertukar = 0;
-        for (j = 0; j < n - 1 - i; j++) 
+        for (j = 0; j < n - 1 - i; j++)
         {
-            if (arr[j] > arr[j + 1]) 
+            if (arr[j] > arr[j + 1])
             {
                 swapInt(&arr[j], &arr[j + 1]);
                 tertukar = 1;
             }
         }
-        if (!tertukar) break;
+        // pengecekan apabila tidak ada lagi pertukaran
+        if (!tertukar)
+            break;
     }
 }
 
-void selectionSort(int arr[], int n) {
+// Algoritma selection sort
+void selectionSort(int arr[], int n)
+{
     int i, j, idxMin;
-    if (n < 2) return;
-    for (i = 0; i < n - 1; i++) 
+
+    for (i = 0; i < n - 1; i++)
     {
         idxMin = i;
         for (j = i + 1; j < n; j++)
-            if (arr[j] < arr[idxMin]) idxMin = j;
-        if (idxMin != i) swapInt(&arr[i], &arr[idxMin]);
+            if (arr[j] < arr[idxMin])
+                idxMin = j;
+        if (idxMin != i)
+            swapInt(&arr[i], &arr[idxMin]);
     }
 }
