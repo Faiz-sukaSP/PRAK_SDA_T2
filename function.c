@@ -220,3 +220,20 @@ void selectionSort(int arr[], int n)
             swapInt(&arr[i], &arr[idxMin]);
     }
 }
+
+void insertionSord(int arr[], int n)
+{
+    int i, j, kunci;
+
+    for (i = 0; i < n; i++)
+    {
+        kunci = arr[i];
+        j = i - 1;
+        while (j >= 0 && arr[j] > kunci)
+        {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = kunci;
+    }
+}
