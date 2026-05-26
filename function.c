@@ -183,11 +183,10 @@ void shuffleStr(char arr[][MAX_WORD_LEN], int n)
     ========================
 */
 
-// Algoritma buble sort
+// Buble sort
 void bubbleSort(int arr[], int n)
 {
     int i, j, tertukar;
-
     for (i = 0; i < n - 1; i++)
     {
         tertukar = 0;
@@ -205,76 +204,54 @@ void bubbleSort(int arr[], int n)
     }
 }
 
-// Algoritma selection sort
+// Selection sort
 void selectionSort(int arr[], int n)
 {
-    int i, j, idxMin;
-
+    int i, j, idxMin; // idxMin(index elemen terkecil)
     for (i = 0; i < n - 1; i++)
     {
         idxMin = i;
         for (j = i + 1; j < n; j++)
             if (arr[j] < arr[idxMin])
                 idxMin = j;
+        // cek apakah minimum ditemukan di posisi berbeda
         if (idxMin != i)
-            swapInt(&arr[i], &arr[idxMin]);
+            swapInt(&arr[i], &arr[idxMin]); // Menukar nilai antara arr[i] dan arr[idxMin]
     }
 }
-<<<<<<< HEAD
 
-// Fungsi insertion sort
-void insertionSord(int arr[], int n)
-{
-    int i, j, kunci;
-
-    for (i = 0; i < n; i++)
-=======
+// insertion sort
 void insertionSort(int arr[], int n)
 {
-    int i, j, kunci;
-    if (n < 2)
-        return;
+    int i, j, kunci; // j = index
     for (i = 1; i < n; i++)
->>>>>>> main
     {
         kunci = arr[i];
         j = i - 1;
+        // loop untuk menggeser nilai terbesar ke kanan
         while (j >= 0 && arr[j] > kunci)
         {
-            arr[j + 1] = arr[j];
+            arr[j + 1] = arr[j]; // swap
             j--;
         }
         arr[j + 1] = kunci;
     }
 }
 
-<<<<<<< HEAD
 /*
     ========================
-         ADVANCE SORTING
+        ADVANCE SORTING
     ========================
 */
 
-// Quick short
-=======
-/* ================================================================== */
-/*  ADVANCE SORTING — string ascending leksikografis                   */
-/* ================================================================== */
-
-/* ---------- Quick Sort iteratif (stack di heap) ---------- */
-
->>>>>>> main
+// Quick sort
 static int partisiStr(char arr[][MAX_WORD_LEN], int lo, int hi)
 {
     char pivot[MAX_WORD_LEN];
     int mid = lo + (hi - lo) / 2;
     int i, j;
 
-<<<<<<< HEAD
-    // memindahkan elemen tengah hi sebagai pivot
-=======
-    /* Pindahkan elemen tengah ke posisi hi sebagai pivot */
->>>>>>> main
+    // Pindahkan elemen tengah ke posisi hi sebagai pivot
     swapStr(arr[mid], arr[hi]);
     memcpy(pivot, arr[hi], MAX_WORD_LEN);
 
@@ -289,9 +266,6 @@ static int partisiStr(char arr[][MAX_WORD_LEN], int lo, int hi)
     }
     swapStr(arr[i + 1], arr[hi]);
     return i + 1;
-<<<<<<< HEAD
-}
-=======
 }
 
 void quickSortStr(char arr[][MAX_WORD_LEN], int kiri, int kanan)
@@ -333,8 +307,7 @@ void quickSortStr(char arr[][MAX_WORD_LEN], int kiri, int kanan)
     free(stack);
 }
 
-/* ---------- Merge Sort iteratif bottom-up ---------- */
-
+// Merge sort
 static void mergeStr(char arr[][MAX_WORD_LEN],
                      int lo, int mid, int hi)
 {
@@ -397,8 +370,7 @@ void mergeSortStr(char arr[][MAX_WORD_LEN], int kiri, int kanan)
     }
 }
 
-/* ---------- Shell Sort — gap Knuth ---------- */
-
+// Shell sort
 void shellSortStr(char arr[][MAX_WORD_LEN], int n)
 {
     int gap, i, j;
@@ -425,9 +397,11 @@ void shellSortStr(char arr[][MAX_WORD_LEN], int n)
     }
 }
 
-/* ================================================================== */
-/*                 Tampilan & statistik sorting                       */
-/* ================================================================== */
+/*
+==================================
+    Tampilan & statistik sorting
+==================================
+ */
 
 void tampilkanDataInt(int arr[], int n, int jumlahTampil,
                       const char *judul)
@@ -453,6 +427,7 @@ void tampilkanDataInt(int arr[], int n, int jumlahTampil,
     printf("Total data: %d\n", n);
 }
 
+// output statistik program
 void tampilkanRingkasan(const char *namaAlgoritma, int n,
                         double waktuMs)
 {
@@ -463,10 +438,13 @@ void tampilkanRingkasan(const char *namaAlgoritma, int n,
     printf("================================\n");
 }
 
-/* ================================================================== */
-/*  MENU & INPUT                                                        */
-/* ================================================================== */
+/*
+===================
+    MENU & INPUT
+===================
+*/
 
+// membaca input user pada menu
 int bacaPilihanMenu(int min, int max)
 {
     char buf[32];
@@ -494,6 +472,7 @@ int bacaPilihanMenu(int min, int max)
     }
 }
 
+// fungsi untuk meminta user menginput nama file
 static int mintaFile(char words[][MAX_WORD_LEN], int *jumlah)
 {
     char namaFile[256];
@@ -522,4 +501,3 @@ static int mintaFile(char words[][MAX_WORD_LEN], int *jumlah)
         return 1;
     }
 }
->>>>>>> main
