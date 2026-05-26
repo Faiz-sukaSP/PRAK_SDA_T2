@@ -220,12 +220,22 @@ void selectionSort(int arr[], int n)
             swapInt(&arr[i], &arr[idxMin]);
     }
 }
+<<<<<<< HEAD
+
+// Fungsi insertion sort
+void insertionSord(int arr[], int n)
+{
+    int i, j, kunci;
+
+    for (i = 0; i < n; i++)
+=======
 void insertionSort(int arr[], int n)
 {
     int i, j, kunci;
     if (n < 2)
         return;
     for (i = 1; i < n; i++)
+>>>>>>> main
     {
         kunci = arr[i];
         j = i - 1;
@@ -238,19 +248,33 @@ void insertionSort(int arr[], int n)
     }
 }
 
+<<<<<<< HEAD
+/*
+    ========================
+         ADVANCE SORTING
+    ========================
+*/
+
+// Quick short
+=======
 /* ================================================================== */
 /*  ADVANCE SORTING — string ascending leksikografis                   */
 /* ================================================================== */
 
 /* ---------- Quick Sort iteratif (stack di heap) ---------- */
 
+>>>>>>> main
 static int partisiStr(char arr[][MAX_WORD_LEN], int lo, int hi)
 {
     char pivot[MAX_WORD_LEN];
     int mid = lo + (hi - lo) / 2;
     int i, j;
 
+<<<<<<< HEAD
+    // memindahkan elemen tengah hi sebagai pivot
+=======
     /* Pindahkan elemen tengah ke posisi hi sebagai pivot */
+>>>>>>> main
     swapStr(arr[mid], arr[hi]);
     memcpy(pivot, arr[hi], MAX_WORD_LEN);
 
@@ -265,6 +289,9 @@ static int partisiStr(char arr[][MAX_WORD_LEN], int lo, int hi)
     }
     swapStr(arr[i + 1], arr[hi]);
     return i + 1;
+<<<<<<< HEAD
+}
+=======
 }
 
 void quickSortStr(char arr[][MAX_WORD_LEN], int kiri, int kanan)
@@ -495,3 +522,4 @@ static int mintaFile(char words[][MAX_WORD_LEN], int *jumlah)
         return 1;
     }
 }
+>>>>>>> main
