@@ -221,6 +221,7 @@ void selectionSort(int arr[], int n)
     }
 }
 
+// Fungsi insertion sort
 void insertionSord(int arr[], int n)
 {
     int i, j, kunci;
@@ -236,4 +237,34 @@ void insertionSord(int arr[], int n)
         }
         arr[j + 1] = kunci;
     }
+}
+
+/*
+    ========================
+         ADVANCE SORTING
+    ========================
+*/
+
+// Quick short
+static int partisiStr(char arr[][MAX_WORD_LEN], int lo, int hi)
+{
+    char pivot[MAX_WORD_LEN];
+    int mid = lo + (hi - lo) / 2;
+    int i, j;
+
+    // memindahkan elemen tengah hi sebagai pivot
+    swapStr(arr[mid], arr[hi]);
+    memcpy(pivot, arr[hi], MAX_WORD_LEN);
+
+    i = lo - 1;
+    for (j = lo; j < hi; j++)
+    {
+        if (strcmp(arr[j], pivot) <= 0)
+        {
+            i++;
+            swapStr(arr[i], arr[j]);
+        }
+    }
+    swapStr(arr[i + 1], arr[hi]);
+    return i + 1;
 }
